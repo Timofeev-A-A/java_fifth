@@ -12,7 +12,7 @@ public class EquationImpl implements Equation {
 
 
     @Override
-    public EquationImpl solve(double a, double b, double c) throws RemoteException {
+    public String solve(double a, double b, double c) throws RemoteException {
         if (a==0 & b==0) {
             this.x1 = -1;
             this.x2 = -1;
@@ -48,7 +48,7 @@ public class EquationImpl implements Equation {
                 this.x2 = (-(b) - Math.sqrt(d))/(2*a);
             }
         }
-        return this;
+        return this.toString();
     }
 
     @Override

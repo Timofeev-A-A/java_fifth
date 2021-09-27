@@ -9,7 +9,7 @@ public class Client {
         try {
             Registry registry = LocateRegistry.getRegistry(2732);
             Equation stub = (Equation) registry.lookup("equation");
-            System.out.println(stub.solve(1, 1 , 0).toString());
+            System.out.println(stub.solve(1, 1 , 0));
         }
         catch (Exception e) {
             System.err.println("Client exception: " + e.toString());
