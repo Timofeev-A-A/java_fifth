@@ -2,15 +2,17 @@ package third;
 import java.net.*;
 import java. io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public class MailServer {
     private ServerSocket serverSocket;
 
-    public void start(int port) throws IOException {
+    public void start(int port, LinkedList<String> allhist) throws IOException {
         serverSocket = new ServerSocket(port);
         while (true)
-            new EchoClientHandler(serverSocket.accept()).start();
+            new EchoClientHandler(allhist, serverSocket.accept()).start();
     }
 
     public void stop() throws IOException {
@@ -18,14 +20,16 @@ public class MailServer {
     }
 
     private static class EchoClientHandler extends Thread {
-        private ArrayList<String> history;
+        LinkedList<String> allHistory;
+        private LinkedList<String> history;
         private long lastSended;
         private Socket clientSocket;
         private PrintWriter out;
         private Scanner in;
         private int bookmark = 0;
 
-        public EchoClientHandler(Socket socket) {
+        public EchoClientHandler(LinkedList<String> allhist, Socket socket) {
+            this.allHistory = allhist;
             this.clientSocket = socket;
             this.lastSended = System.currentTimeMillis();
         }
@@ -39,7 +43,24 @@ public class MailServer {
 
                 while (true) {
                     if (in.hasNextLine()) {
-                        history.add(in.nextLine());
+                        synchronized (allHistory) {
+                            allHistory.add(in.nextLine());
+                        }
+                    }
+                    if ((System.currentTimeMillis() - lastSended) > 5000) {
+                        synchronized (allHistory) {
+                            if (allHistory.size() > bookmark) {
+                                history.addAll(bookmark, allHistory);
+                                bookmark = allHistory.size();
+                            }
+                            if (history.size()>0){
+                                for (String message: history){
+                                    out.println(message);
+                                }
+                                history.clear();
+                            }
+                            lastSended = System.currentTimeMillis();
+                        }
                     }
 
                 }
@@ -57,10 +78,10 @@ public class MailServer {
 
 
     public static void main(String[] args) throws IOException {
-        ArrayList<String> allHistory;
+        LinkedList<String> allHistory = new LinkedList<>();
         System.out.println("Сервер запущен...");
         MailServer server = new MailServer();
-        server.start(5555);
+        server.start(5555, allHistory);
 
     }
 }
