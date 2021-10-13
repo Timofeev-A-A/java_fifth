@@ -21,7 +21,7 @@ public class MailServer {
 
     private static class EchoClientHandler extends Thread {
         LinkedList<String> allHistory;
-        private LinkedList<String> history;
+        private LinkedList<String> history = new LinkedList<>();
         private long lastSended;
         private Socket clientSocket;
         private PrintWriter out;
@@ -45,12 +45,15 @@ public class MailServer {
                     if (in.hasNextLine()) {
                         synchronized (allHistory) {
                             allHistory.add(in.nextLine());
+                            System.out.println(allHistory);
                         }
                     }
+                    System.out.println(System.currentTimeMillis() - lastSended);
                     if ((System.currentTimeMillis() - lastSended) > 5000) {
                         synchronized (allHistory) {
                             if (allHistory.size() > bookmark) {
                                 history.addAll(bookmark, allHistory);
+                                System.out.println(history);
                                 bookmark = allHistory.size();
                             }
                             if (history.size()>0){
@@ -66,10 +69,13 @@ public class MailServer {
                 }
             } catch (Exception e) {
                 System.out.println("Ошибка:" + clientSocket);
+                System.out.println(e);
+                e.printStackTrace();
             } finally {
                 try {
                     clientSocket.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 System.out.println("Closed: " + clientSocket);
             }
