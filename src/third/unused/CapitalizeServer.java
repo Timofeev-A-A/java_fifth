@@ -1,4 +1,4 @@
-package third;
+package third.unused;
 
 import java.io.IOException;
 import java.io.PrintWriter;

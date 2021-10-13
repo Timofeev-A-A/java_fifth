@@ -1,6 +1,5 @@
-package third;
+package third.unused;
 import org.junit.Test;
-import org.junit.runners.JUnit4;
 
 import java.net.*;
 import java. io.*;
