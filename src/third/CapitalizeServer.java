@@ -61,22 +61,27 @@ public class CapitalizeServer {
                 in = new Scanner(clientSocket.getInputStream());
 
                 while (true) {
-                    if (in.hasNextLine()) {
-                        synchronized (allHistory) {
-                            allHistory.add(in.nextLine());
-                            System.out.println("allHistory: "+allHistory);
-                        }
-                    }
-                    synchronized (allHistory) {
-                        if (allHistory.size() > bookmark) {
-                            //history.addAll(bookmark, allHistory);
-                            for (int i = bookmark; i < allHistory.size(); i++) {
-                                history.add(allHistory.get(i));
+                    System.out.println("cycle started: " + history);
+                    while((System.currentTimeMillis() - lastSended) < 500) {
+                        System.out.println("pass 1: " + (System.currentTimeMillis() - lastSended));
+                        if (in.hasNext()) {
+                            synchronized (allHistory) {
+                                allHistory.add(in.nextLine());
+                                System.out.println("allHistory: " + allHistory);
                             }
-                            System.out.println("history: "+history);
-                            bookmark = allHistory.size();
                         }
                     }
+                        synchronized (allHistory) {
+                            System.out.println("sizes: " + allHistory.size() + ", " + bookmark);
+                            if (allHistory.size() > bookmark) {
+                                for (int i = bookmark; i < allHistory.size(); i++) {
+                                    history.add(allHistory.get(i));
+                                }
+                                System.out.println("history: " + history);
+                                bookmark = allHistory.size();
+                            }
+                        }
+                    System.out.println("pass 2: " + (System.currentTimeMillis() - lastSended));
                     if ((System.currentTimeMillis() - lastSended) > 500) {
                         /*synchronized (allHistory) {
                             if (allHistory.size() > bookmark) {

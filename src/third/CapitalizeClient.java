@@ -15,10 +15,10 @@ public class CapitalizeClient {
             var in = new Scanner(socket.getInputStream());
             var out = new PrintWriter(socket.getOutputStream(), true);
             while (true) {
-                if (scanner.hasNextLine()) {
+                if (scanner.hasNext()) {
                     out.println(scanner.nextLine());
                 }
-                if (in.hasNextLine()) {
+                if (in.hasNext()) {
                     System.out.println(in.nextLine());
                 }
             }
