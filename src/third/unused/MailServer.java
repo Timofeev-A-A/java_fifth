@@ -1,8 +1,6 @@
-package third;
+package third.unused;
 import java.net.*;
 import java. io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Scanner;
 

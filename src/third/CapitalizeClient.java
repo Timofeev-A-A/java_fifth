@@ -14,13 +14,9 @@ public class CapitalizeClient {
             var scanner = new Scanner(System.in);
             var in = new Scanner(socket.getInputStream());
             var out = new PrintWriter(socket.getOutputStream(), true);
-            while (true) {
-                if (scanner.hasNext()) {
-                    out.println(scanner.nextLine());
-                }
-                if (in.hasNext()) {
-                    System.out.println(in.nextLine());
-                }
+            while (scanner.hasNext()) {
+                out.println(scanner.nextLine());
+                System.out.println(in.nextLine());
             }
         }
     }
